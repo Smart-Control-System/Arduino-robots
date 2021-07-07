@@ -13,12 +13,16 @@
 #define LF 10   
 
 
-int val;
+char val;
 bool control;
 
-void setup()
-{
-  Serial.begin(9600); 
+
+int trigPin = A3;
+int echoPin = A4;
+
+
+void setup() {
+   Serial.begin(9600); 
   pinMode(RF, OUTPUT);
   pinMode(RB, OUTPUT);
   pinMode(LF, OUTPUT);
@@ -122,82 +126,42 @@ void fuck_stop_all(){
   digitalWrite(LF, OFF);
   digitalWrite(LB, OFF);
 }
-void loop()
-{
+  Serial.begin (9600);
+  pinMode(trigPin, OUTPUT);
+  pinMode(trigPin, INPUT);
+}
 
-  if (Serial.available())
-  {
+void loop() {
+  
+  //int duration, cm;
+   if (Serial.available()){
     val = Serial.read();
-    Serial.println(val);
-  }
-if (val==88)
-control = false;
 
-if (val==120)
-control = true;
-
-if (control==true)
-{
-//  if (val == 1){
-//    test_rf();
-//  }
-//  else if (val == 2){
-//    test_rb();
-//  }
-//  else if (val == 3){
-//    test_lf();
-//  }
-//  else if (val == 4){
-//    test_lb();
-//  }
-//  else if (val == 5){
-//    fuck_stop_all();
-//  }
-//  
-    if (val == 70)
-    {
+    if(val == "w"){
       Forward();
     }
-    
-    else if (val == 66)
-    {
-      Backward();
+    if (val == "s"){
+      Backward(); 
     }
-
-    else if (val == 76)
-    {
+    if (val == "a"){
       TurnLeft();
     }
-
-    else if (val == 82)
-    {
+    if (val == "d"){
       TurnRight();
     }
+    
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
 
-    else if (val == 73)
-    {
-      RightForward();
-    }
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
 
-    else if (val == 74)
-    {
-      RightBackward();
-    }
+  duration = pulseIn(echoPin,HIGH);
+  cm = duration /58;
+  Serial.print (cm);
+  Serial.println(" cm");
 
-    else if (val == 71)
-    {
-      LeftForward();
-    }
-
-    else if (val == 72)
-    {
-      LeftBackward();
-    }
-
-    else if (val == 83)
-    {
-      fuck_stop_all();
-    }
-}
+  delay(1000);
   
-  }
+}
